@@ -18,6 +18,8 @@ export const appRouter = t.router({
       GithubAuthProvider.credential(idToken)
     )
 
+    console.log(result.user.providerId)
+
     const email = result.user.email
 
     if (!email) return { ok: false, message: "Email required!" }

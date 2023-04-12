@@ -3,6 +3,7 @@
   import { trpc } from "../utils/trpc"
   import { auth, provider } from "../utils/firebase"
   import { idToken, token } from "../utils/atoms"
+  import { onMount } from "svelte"
 
   const signIn = async () => {
     const result = await signInWithPopup(auth, provider)
@@ -16,10 +17,28 @@
 
     idToken.set(credential?.accessToken ?? null)
 
-    const token = await trpc.signIn.query()
+    const tokenRes = await trpc.signIn.query()
 
-    console.log("From Server", token)
+    if (!("token" in tokenRes)) {
+      // TODO: add alert
+
+      return
+    }
+
+    token.set(tokenRes.token)
+    idToken.set(null)
+
+    token.subscribe((changed) => {
+      if (changed) localStorage.setItem("token", changed)
+    })
   }
+
+  onMount(() => {
+    const tokenInStorage = localStorage.getItem("token")
+    if (!tokenInStorage) return
+
+    token.set(tokenInStorage)
+  })
 </script>
 
 {#if $token}
