@@ -1,6 +1,9 @@
 # build output
 dist/
 
+*.key
+*.key.pub
+
 # generated types
 .astro/
 
