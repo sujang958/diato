@@ -19,7 +19,7 @@
   const updateTodo = async () => {
     const diff = getTodoDiff()
 
-    if (!diff) return console.log("Nope")
+    if (!diff) return
 
     updatedTodo = await trpc.updateTodo.mutate({
       id: todo.id,
@@ -27,8 +27,6 @@
       finished: todo.finished,
       todo: todo.todo,
     })
-
-    console.log("Yup")
   }
 
   const deleteTodo = async () => {
