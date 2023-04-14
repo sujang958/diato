@@ -1,5 +1,4 @@
-import type { Todo } from "@prisma/client"
-import { atom, map } from "nanostores"
+import { atom } from "nanostores"
 
 export const idToken = atom<null | string>(null)
 
