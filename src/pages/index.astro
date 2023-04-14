@@ -1,5 +1,7 @@
 ---
 import LoginButton from "../components/LoginButton.svelte"
+import TodoItem from "../components/TodoItem.svelte"
+import TodoList from "../components/TodoList.svelte"
 import Layout from "../layouts/BaseLayout.astro"
 ---
 
@@ -56,16 +58,5 @@ import Layout from "../layouts/BaseLayout.astro"
       <p class="text-xl font-bold">토</p>
     </button>
   </div>
-  <div class="flex flex-col gap-y-4 py-10">
-    <div class="flex flex-row items-start gap-x-4">
-      <input type="checkbox" class="flex-none rounded-xl w-4 h-4 mt-1" />
-      <div
-        contenteditable="true"
-        data-ph="Type here"
-        class="flex-1 w-full outline-none focus:border-b border-neutral-200 empty:before:content-[attr(data-ph)] before:text-neutral-500 before:cursor-text"
-        spellcheck="false"
-      >
-      </div>
-    </div>
-  </div>
+  <TodoList client:only />
 </Layout>

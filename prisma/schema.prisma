@@ -23,6 +23,8 @@ model Todo {
   finished  Boolean
   startDate DateTime
 
+  todo    String
+
   author   User   @relation(references: [id], fields: [authorId])
   authorId BigInt
 }

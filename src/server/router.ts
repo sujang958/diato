@@ -1,11 +1,34 @@
-import { initTRPC } from "@trpc/server"
+import { TRPCError, initTRPC } from "@trpc/server"
 import type { Context } from "./context"
 import { GithubAuthProvider, signInWithCredential } from "firebase/auth"
 import { auth } from "../utils/firebase"
 import prisma from "../utils/prisma"
-import { bigintToString, sign } from "../utils/jwt"
+import { sign } from "../utils/jwt"
+import { z } from "zod"
+import SuperJSON from "superjson"
 
-const t = initTRPC.context<Context>().create()
+const t = initTRPC.context<Context>().create({ transformer: SuperJSON })
+
+const hasUser = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.user)
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Not logged in" })
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: ctx.user.id,
+    },
+  })
+
+  if (!user)
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User not found, try logging out",
+    })
+
+  return next({ ctx: { user: user } })
+})
+
+const userProcedure = t.procedure.use(hasUser)
 
 export const appRouter = t.router({
   signIn: t.procedure.query(async ({ ctx }) => {
@@ -35,16 +58,8 @@ export const appRouter = t.router({
 
     return { token: sign(user) }
   }),
-  todos: t.procedure.query(async ({ ctx }) => {
-    if (!ctx.user) return { ok: false, message: "You're not signed in" }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: ctx.user.id,
-      },
-    })
-
-    if (!user) return { ok: false, message: "User not found, try logging out" }
+  todos: userProcedure.query(async ({ ctx }) => {
+    const user = ctx.user
 
     const todos = await prisma.todo.findMany({
       where: { authorId: user.id },
@@ -52,6 +67,54 @@ export const appRouter = t.router({
 
     return todos
   }),
+  addTodo: userProcedure
+    .input(
+      z.object({
+        todo: z.string(),
+        deadline: z.date().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = ctx.user
+
+      return await prisma.todo.create({
+        data: {
+          todo: input.todo,
+          deadline: input.deadline,
+          finished: false,
+          startDate: new Date(),
+          authorId: user.id,
+        },
+      })
+    }),
+  removeTodo: userProcedure
+    .input(
+      z.object({
+        id: z.bigint(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = ctx.user
+
+      const todo = await prisma.todo.findUnique({
+        where: { id: input.id },
+      })
+
+      if (!todo)
+        throw new TRPCError({ code: "NOT_FOUND", message: "to-do not found" })
+
+      if (todo.authorId != user.id)
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permissions to do this",
+        })
+      
+      await prisma.todo.delete({
+        where: {
+          id: input.id,
+        },
+      })
+    }),
 })
 
 export type AppRouter = typeof appRouter

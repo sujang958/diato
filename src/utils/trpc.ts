@@ -2,8 +2,10 @@ import { createTRPCProxyClient, httpBatchLink } from "@trpc/client"
 import type { AppRouter } from "../server/router"
 import { idToken, token } from "./atoms"
 import { DiatoHeaders } from "./headers"
+import SuperJSON from "superjson"
 
 export const trpc = createTRPCProxyClient<AppRouter>({
+  transformer: SuperJSON,
   links: [
     httpBatchLink({
       url: "http://localhost:3000/api/trpc",

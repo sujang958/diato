@@ -19,7 +19,6 @@ export async function createContext({
 
   const jwt = req.headers.get(DiatoHeaders.DiatoToken)
 
-  console.log(jwt)
   if (jwt) {
     try {
       const payload = verify(jwt)
