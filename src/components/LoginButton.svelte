@@ -28,6 +28,8 @@
     token.set(tokenRes.token)
     idToken.set(null)
 
+    console.log(await trpc.todos.query())
+
     token.subscribe((changed) => {
       if (changed) localStorage.setItem("token", changed)
     })

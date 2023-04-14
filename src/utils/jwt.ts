@@ -60,13 +60,11 @@ export const sign = (payload: JWTPayloadType) => {
   return jwt.sign(bigintToString(payload), JWT_SECRET, { algorithm: "RS256" })
 }
 
-export const verify = (token: string, toBigint: boolean) => {
-  const jwtRes = jwt.verify(token, JWT_PUB)
-  const payload = JSON.parse(jwtRes.toString())
+export const verify = (token: string) => {
+  const payload = jwt.verify(token, JWT_PUB)
 
   const parsed = JWTPayload.safeParse(payload)
   if (!parsed.success) throw new Error("Payload not valid")
 
-  if (toBigint) return stringToBigint(parsed.data)
-  else return bigintToString(parsed.data)
+  return parsed.data
 }

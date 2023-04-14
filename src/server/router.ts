@@ -3,7 +3,7 @@ import type { Context } from "./context"
 import { GithubAuthProvider, signInWithCredential } from "firebase/auth"
 import { auth } from "../utils/firebase"
 import prisma from "../utils/prisma"
-import { sign } from "../utils/jwt"
+import { bigintToString, sign } from "../utils/jwt"
 
 const t = initTRPC.context<Context>().create()
 
@@ -17,8 +17,6 @@ export const appRouter = t.router({
       auth,
       GithubAuthProvider.credential(idToken)
     )
-
-    console.log(result.user.providerId)
 
     const email = result.user.email
 
@@ -36,6 +34,23 @@ export const appRouter = t.router({
     }
 
     return { token: sign(user) }
+  }),
+  todos: t.procedure.query(async ({ ctx }) => {
+    if (!ctx.user) return { ok: false, message: "You're not signed in" }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+    })
+
+    if (!user) return { ok: false, message: "User not found, try logging out" }
+
+    const todos = await prisma.todo.findMany({
+      where: { authorId: user.id },
+    })
+
+    return todos
   }),
 })
 
