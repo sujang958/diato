@@ -1,18 +1,48 @@
 <script lang="ts">
   import type { Todo } from "@prisma/client"
   import { trpc } from "../utils/trpc"
+  import { onMount } from "svelte"
 
   export let todo: Todo
   export let onDelete = () => {}
 
-  $: if (todo.finished) {
-    console.log("finished changed", todo)
+  let updatedTodo: Todo = structuredClone(todo)
+
+  const getTodoDiff = (): boolean => {
+    if (todo.todo.trim() != updatedTodo.todo.trim()) return true
+    else if (todo.finished != updatedTodo.finished) return true
+    else if (todo.deadline?.toUTCString() != todo.deadline?.toUTCString())
+      return true
+    else return false
+  }
+
+  const updateTodo = async () => {
+    const diff = getTodoDiff()
+
+    if (!diff) return console.log("Nope")
+
+    updatedTodo = await trpc.updateTodo.mutate({
+      id: todo.id,
+      deadline: todo.deadline,
+      finished: todo.finished,
+      todo: todo.todo,
+    })
+
+    console.log("Yup")
   }
 
   const deleteTodo = async () => {
     onDelete()
     await trpc.removeTodo.mutate({ id: todo.id })
   }
+
+  onMount(() => {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState !== "hidden") return
+
+      updateTodo()
+    })
+  })
 </script>
 
 <div class="flex flex-row items-start gap-x-4 group relative">
@@ -28,9 +58,8 @@
       todo.finished ? "line-through" : ""
     }`}
     spellcheck="false"
-  >
-    {todo.todo}
-  </div>
+    bind:innerText={todo.todo}
+  />
   <div
     class="group-hover:flex flex-row items-center absolute top-1/2 transform -translate-y-1/2 hidden right-1"
   >

@@ -25,7 +25,7 @@
       return
     }
 
-    token.set(tokenRes.token)
+    token.set(tokenRes.token ?? null)
     idToken.set(null)
 
     console.log(await trpc.todos.query())

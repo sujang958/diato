@@ -108,12 +108,50 @@ export const appRouter = t.router({
           code: "FORBIDDEN",
           message: "You don't have permissions to do this",
         })
-      
+
       await prisma.todo.delete({
         where: {
           id: input.id,
         },
       })
+    }),
+  updateTodo: userProcedure
+    .input(
+      z.object({
+        id: z.bigint(),
+        deadline: z.date().nullable(),
+        todo: z.string().nullable(),
+        finished: z.boolean().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = ctx.user
+
+      const todo = await prisma.todo.findUnique({
+        where: { id: input.id },
+      })
+
+      if (!todo)
+        throw new TRPCError({ code: "NOT_FOUND", message: "to-do not found" })
+
+      if (todo.authorId != user.id)
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permissions to do this",
+        })
+
+      const updatedTodo = await prisma.todo.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...(input.todo && { todo: input.todo }),
+          ...(input.deadline && { deadline: input.deadline }),
+          ...(input.finished && { finished: input.finished }),
+        },
+      })
+
+      return updatedTodo
     }),
 })
 
