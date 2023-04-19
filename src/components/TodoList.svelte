@@ -10,6 +10,7 @@
   let deadline = ""
   let todoAddInput: HTMLInputElement
 
+  let loading = false
   let preferencesShown = false
 
   token.subscribe(async (newToken) => {
@@ -17,6 +18,7 @@
     try {
       const fetchedTodos = await trpc.todos.query()
 
+      loading = true
       todos = [
         ...fetchedTodos.map(
           ({ authorId, deadline, finished, id, startDate, todo }) =>
@@ -30,6 +32,7 @@
             } satisfies Todo)
         ),
       ]
+      loading = false
     } catch (e) {
       console.log("There was an error fetching todos")
       console.log(e)
@@ -205,15 +208,19 @@
     </div>
   </div>
   <div class="pt-0.5" />
-  {#each todos as todo}
-    <TodoItem
-      {todo}
-      onDelete={() => {
-        const arr = structuredClone(todos)
-        const todoId = arr.findIndex(({ id }) => id == todo.id)
-        delete arr[todoId]
-        todos = [...arr.filter((e) => e)]
-      }}
-    />
-  {/each}
+  {#if loading}
+    <p class="text-lg">로딩</p>
+  {:else}
+    {#each todos as todo}
+      <TodoItem
+        {todo}
+        onDelete={() => {
+          const arr = structuredClone(todos)
+          const todoId = arr.findIndex(({ id }) => id == todo.id)
+          delete arr[todoId]
+          todos = [...arr.filter((e) => e)]
+        }}
+      />
+    {/each}
+  {/if}
 </div>
