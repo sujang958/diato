@@ -2,7 +2,7 @@
   import type { Todo } from "@prisma/client"
   import { trpc } from "../utils/trpc"
   import TodoItem from "./TodoItem.svelte"
-  import { token } from "../utils/atoms"
+  import { focusedDate, token } from "../utils/atoms"
   import { onMount } from "svelte"
 
   let todos: Todo[] = []
@@ -16,7 +16,9 @@
   token.subscribe(async (newToken) => {
     if (!newToken) return
     try {
-      const fetchedTodos = await trpc.todos.query()
+      const fetchedTodos = await trpc.todoByDate.query({
+        date: focusedDate.get(),
+      })
 
       loading = true
       todos = [
