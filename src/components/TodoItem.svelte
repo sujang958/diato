@@ -1,12 +1,25 @@
 <script lang="ts">
   import type { Todo } from "@prisma/client"
   import { trpc } from "../utils/trpc"
-  import { onMount } from "svelte"
 
   export let todo: Todo
   export let onDelete = () => {}
 
   let updatedTodo: Todo = structuredClone(todo)
+
+  const debounce = (fn: () => any, delay: number) => {
+    let timerId: NodeJS.Timeout | null = null
+
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId)
+      }
+
+      timerId = setTimeout(() => {
+        fn()
+      }, delay)
+    }
+  }
 
   const getTodoDiff = (): boolean => {
     if (todo.todo.trim() != updatedTodo.todo.trim()) return true
@@ -16,7 +29,7 @@
     else return false
   }
 
-  const updateTodo = async () => {
+  const updateTodo = debounce(async () => {
     const diff = getTodoDiff()
 
     if (!diff) return
@@ -27,20 +40,16 @@
       finished: todo.finished,
       todo: todo.todo,
     })
-  }
+  }, 100)
 
   const deleteTodo = async () => {
     onDelete()
     await trpc.removeTodo.mutate({ id: todo.id })
   }
 
-  onMount(() => {
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState !== "hidden") return
-
-      updateTodo()
-    })
-  })
+  $: if (todo) {
+    updateTodo()
+  }
 </script>
 
 <div class="flex flex-row items-start gap-x-4 group relative">
