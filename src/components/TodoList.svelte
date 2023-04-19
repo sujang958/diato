@@ -148,7 +148,7 @@
     <input
       type="text"
       class="outline-none border-neutral-200 border rounded-lg px-2 py-1 w-full"
-      placeholder="Press / to focus"
+      placeholder="/ 키를 눌러 포커스"
       bind:this={todoAddInput}
       on:keypress={(event) => {
         if (event.key == "Enter") addTodo()
