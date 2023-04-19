@@ -13,12 +13,13 @@
   let loading = false
   let preferencesShown = false
 
-  token.subscribe(async (newToken) => {
-    if (!newToken) return
+  focusedDate.subscribe(async (date) => {
     try {
       const fetchedTodos = await trpc.todoByDate.query({
-        date: focusedDate.get(),
+        date,
       })
+
+      // TODO: add loading screen when changing date
 
       loading = true
       todos = [
