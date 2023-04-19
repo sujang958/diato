@@ -153,6 +153,30 @@ export const appRouter = t.router({
 
       return updatedTodo
     }),
+  todoByDate: userProcedure
+    .input(
+      z.object({
+        date: z.date(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { user } = ctx
+      const { date } = input
+
+      const todos = await prisma.todo.findMany({
+        where: {
+          authorId: user.id,
+        },
+      })
+
+      return todos.filter((todo) =>
+        todo.deadline ? (date.getTime() < todo.deadline.getTime()) : (
+          todo.startDate.getDate() == date.getDate() &&
+            todo.startDate.getMonth() == date.getMonth() &&
+            todo.startDate.getFullYear() == date.getFullYear()
+        )
+      )
+    }),
 })
 
 export type AppRouter = typeof appRouter
