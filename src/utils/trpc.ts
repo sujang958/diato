@@ -8,7 +8,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
   transformer: SuperJSON,
   links: [
     httpBatchLink({
-      url: "http://localhost:3000/api/trpc",
+      url: process.env?.VERCEL_URL ?? "http://localhost:3000/api/trpc",
       headers: () => {
         const _idToken = idToken.get()
         const _token = token.get()
