@@ -1,6 +1,6 @@
 ---
 import DateSelectButton from "../components/DateSelectButton.svelte"
-import DaySelectList from "../components/DaySelectList.svelte";
+import DaySelectList from "../components/DaySelectList.svelte"
 import LoginButton from "../components/LoginButton.svelte"
 import TodoList from "../components/TodoList.svelte"
 import Layout from "../layouts/BaseLayout.astro"
@@ -17,3 +17,9 @@ import Layout from "../layouts/BaseLayout.astro"
   </div>
   <TodoList client:only />
 </Layout>
+
+<script>
+  import { token } from "../utils/atoms"
+
+  token.set(localStorage.getItem("token"))
+</script>
