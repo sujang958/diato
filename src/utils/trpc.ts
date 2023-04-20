@@ -8,7 +8,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
   transformer: SuperJSON,
   links: [
     httpBatchLink({
-      url: process.env?.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/trpc` : "http://localhost:3000/api/trpc",
+      url: import.meta.env.PROD ? `https://diato.vercel.app/api/trpc` : "http://localhost:3000/api/trpc",
       headers: () => {
         const _idToken = idToken.get()
         const _token = token.get()
