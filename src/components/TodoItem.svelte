@@ -54,6 +54,11 @@
 
 <div class="p-2.5 rounded-lg shadow">
   <div class="flex flex-row items-start gap-x-4 group relative">
+      <input
+        type="checkbox"
+        class="flex-none rounded w-4 h-4 mt-1"
+        bind:checked={todo.finished}
+      />
     <div
       contenteditable="true"
       data-ph="Type here"
@@ -89,7 +94,13 @@
       </button>
     </div>
   </div>
-  <div class="mt-1">
-    <p class="text-xs text-red-800">마감까지 1일 남음</p>
-  </div>
+  {#if todo.deadline}
+    <div class="mt-1">
+      <p class="text-xs text-red-800">
+        마감까지 {Math.floor(
+          (todo.deadline.getTime() - Date.now()) / 1000 / 60 / 60 / 24
+        )}일 남음
+      </p>
+    </div>
+  {/if}
 </div>
