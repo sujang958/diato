@@ -1,6 +1,8 @@
 "use client"
 
 import DaySelectItem from "@/components/DaySelectItem"
+import TodoItem from "@/components/TodoItem"
+import Link from "next/link"
 import { useState } from "react"
 
 export type Days = "일" | "월" | "화" | "수" | "목" | "금" | "토"
@@ -16,7 +18,7 @@ export default function Home() {
         <button className="text-4xl font-bold rounded-lg p-1" type="button">
           {currentDate.getMonth()}월 {currentDate.getDate()}일
         </button>
-        <button type="button" className="p-1">
+        <Link href="/settings" type="button" className="p-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -36,7 +38,7 @@ export default function Home() {
               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-        </button>
+        </Link>
       </div>
       <div className="py-3"></div>
       <div className="flex flex-row items-center gap-x-3 justify-between">
@@ -62,10 +64,7 @@ export default function Home() {
       </div>
       <div className="py-5"></div>
       <div className="flex flex-col gap-y-3">
-        <div className="flex flex-row items-center gap-x-1">
-          <input type="checkbox" className="rounded w-4 h-4" />
-          <input type="text" className="h-6 border-0 focus:ring-0" placeholder="할 일 적기" />
-        </div>
+        <TodoItem />
       </div>
     </div>
   )
