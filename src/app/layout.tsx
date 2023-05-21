@@ -1,8 +1,8 @@
-import './globals.css'
+import "./globals.css"
 
 export const metadata = {
-  title: 'Diato',
-  description: '요일별로 정리된 할 일 리스트.',
+  title: "Diato",
+  description: "요일별로 정리된 할 일 리스트.",
 }
 
 export default function RootLayout({
