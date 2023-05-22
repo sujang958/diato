@@ -3,14 +3,36 @@
 import DaySelectItem from "@/components/DaySelectItem"
 import TodoItem from "@/components/TodoItem"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState, useTransition } from "react"
+import { getTodos } from "./actions"
+import { useAtomValue } from "jotai"
+import { tokenAtom } from "@/utils/states"
+import { Todo } from "@prisma/client"
 
 export type Days = "일" | "월" | "화" | "수" | "목" | "금" | "토"
 
 const dayArray: Days[] = ["일", "월", "화", "수", "목", "금", "토"]
 
-export default function Home() {
+export default async function Home() {
   const [currentDate, setCurrentDate] = useState(new Date())
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const [todos, setTodos] = useState<Todo[]>([])
+  const token = useAtomValue(tokenAtom)
+
+  const fetchTodos = async () => {
+    if (!token) return router.push("/login")
+    const todos = await getTodos(token)
+    if ("ok" in todos) return // TODO: show an error alert
+
+    setTodos([...todos])
+  }
+
+  useEffect(() => {
+    if (!token) router.push("/login")
+    fetchTodos()
+  }, [router, token])
 
   return (
     <div className="flex flex-col">

@@ -1,17 +1,18 @@
 "use client"
 
 import { auth, provider } from "@/utils/firebase"
-import { tokenAtom } from "@/utils/states"
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth"
 import { useAtom } from "jotai"
 import { NextPage } from "next"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { useEffect, useTransition } from "react"
 import { login } from "./actions"
+import { verifyToken } from "@/utils/jwt"
+import { tokenAtom } from "@/utils/states"
 
 const LoginPage: NextPage = () => {
-  const [token, setToken] = useAtom(tokenAtom)
   const [isPending, startTransition] = useTransition()
+  const [token, setToken] = useAtom(tokenAtom)
   const router = useRouter()
 
   const signIn = async () => {
@@ -19,10 +20,8 @@ const LoginPage: NextPage = () => {
     const credential = GithubAuthProvider.credentialFromResult(result)
 
     if (!credential?.accessToken) return // TODO: show an error alert
-    
+
     const loginResult = await login(credential.accessToken)
-    
-    console.log(loginResult)
 
     if (!loginResult.ok) return // TODO: show an error alert
 
@@ -30,10 +29,8 @@ const LoginPage: NextPage = () => {
   }
 
   useEffect(() => {
-    if (token) {
-      router.push("/")
-    }
-  }, [router])
+    if (token) router.push("/")
+  }, [router, token])
 
   return (
     <div className="flex flex-col items-center justify-center h-full">

@@ -1,9 +1,15 @@
 "use server"
 
 import { prisma } from "@/utils/prisma"
-import { GithubAuthProvider, getAuth, signInWithCredential } from "firebase/auth"
+import {
+  GithubAuthProvider,
+  getAuth,
+  signInWithCredential,
+} from "firebase/auth"
 import { sign } from "jsonwebtoken"
 import { initializeApp } from "firebase/app"
+import { cookies } from "next/headers"
+import { jwtPayload, signToken } from "@/utils/jwt"
 
 const firebaseConfig = {
   apiKey: "AIzaSyBcrQBBq8CCVN_kVmAgiBdtqg5Nw5Hoh1U",
@@ -40,15 +46,9 @@ export async function login(accessToken: string): Promise<LoginReturnType> {
       data: { email, name: result.user.displayName ?? "이름없음" },
     })
 
-  if (!process.env.RSA_PRIVATE) return { ok: false, message: "server fault" }
+  const token = await signToken(user.id, email)
 
-  const token = sign(
-    { id: user.id, email: user.email },
-    process.env.RSA_PRIVATE,
-    {
-      algorithm: "RS256",
-    }
-  )
+  if (typeof token == "object") return { ok: false, message: token.message }
 
   return { ok: true, token }
 }

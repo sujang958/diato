@@ -1,19 +1,19 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "email" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "id" INT8 NOT NULL DEFAULT unique_rowid(),
+    "email" STRING NOT NULL,
+    "name" STRING NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Todo" (
-    "id" SERIAL NOT NULL,
-    "finished" BOOLEAN NOT NULL,
-    "todo" TEXT NOT NULL,
+    "id" INT8 NOT NULL DEFAULT unique_rowid(),
+    "finished" BOOL NOT NULL,
+    "todo" STRING NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
-    "authorId" INTEGER NOT NULL,
+    "authorId" INT8 NOT NULL,
 
     CONSTRAINT "Todo_pkey" PRIMARY KEY ("id")
 );

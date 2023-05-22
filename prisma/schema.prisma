@@ -6,22 +6,22 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id    Int @id @default(autoincrement())
+  id    BigInt @id @default(autoincrement())
   email String @unique
   name  String
   todos Todo[]
 }
 
 model Todo {
-  id        Int    @id @default(autoincrement())
+  id        BigInt    @id @default(autoincrement())
   finished  Boolean
   todo    String
   date    DateTime 
   author   User   @relation(references: [id], fields: [authorId])
-  authorId Int
+  authorId BigInt
 }
