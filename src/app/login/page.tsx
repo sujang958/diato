@@ -6,18 +6,27 @@ import { GithubAuthProvider, signInWithPopup } from "firebase/auth"
 import { useAtom } from "jotai"
 import { NextPage } from "next"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useTransition } from "react"
+import { login } from "./actions"
 
 const LoginPage: NextPage = () => {
   const [token, setToken] = useAtom(tokenAtom)
+  const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
   const signIn = async () => {
     const result = await signInWithPopup(auth, provider)
     const credential = GithubAuthProvider.credentialFromResult(result)
-    // credential?.accessToken
-    // https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions
-    // // TODO: actions.ts 만들어서 JWT 만들기
+
+    if (!credential?.accessToken) return // TODO: show an error alert
+    
+    const loginResult = await login(credential.accessToken)
+    
+    console.log(loginResult)
+
+    if (!loginResult.ok) return // TODO: show an error alert
+
+    setToken(loginResult.token)
   }
 
   useEffect(() => {
@@ -34,7 +43,9 @@ const LoginPage: NextPage = () => {
         <button
           type="button"
           onClick={() => {
-            signIn()
+            startTransition(() => {
+              signIn()
+            })
           }}
           className="flex flex-row items-center justify-center bg-black rounded-lg py-2 px-4 gap-x-3 w-full"
         >
