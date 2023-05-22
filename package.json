@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^4.14.1",
     "@types/node": "20.2.1",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "firebase": "^9.22.0",
+    "jotai": "^2.1.0",
+    "jsonwebtoken": "^9.0.0",
     "next": "13.4.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -20,8 +23,10 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
+    "@types/jsonwebtoken": "^9.0.2",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
+    "prisma": "^4.14.1",
     "tailwindcss": "^3.3.2"
   }
 }
