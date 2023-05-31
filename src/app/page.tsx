@@ -71,6 +71,27 @@ export default function Home() {
       <div className="flex flex-col gap-y-3">
         <TodoItem />
       </div>
+      <div className="fixed flex flex-col items-center justify-center bottom-10 w-full left-0">
+        <div className="max-w-md w-full px-8 flex flex-row items-center justify-end">
+          <button type="button" className="bg-black rounded-full p-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="white"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      {/* TODO: seperate to components */}
     </div>
   )
 }
