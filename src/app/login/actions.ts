@@ -29,6 +29,8 @@ type LoginReturnType =
   | { ok: true; token: string }
 
 export async function login(accessToken: string): Promise<LoginReturnType> {
+  if (cookies().get("token")?.value) return redirect("/")
+
   const credential = GithubAuthProvider.credential(accessToken)
   const result = await signInWithCredential(getAuth(), credential)
 
@@ -56,7 +58,5 @@ export async function login(accessToken: string): Promise<LoginReturnType> {
     secure: process.env.NODE_ENV == "production",
   })
 
-  console.log("ok")
-
-  return redirect("/")
+  redirect("/")
 }

@@ -2,17 +2,12 @@
 
 import { auth, provider } from "@/utils/firebase"
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth"
-import { useAtom } from "jotai"
 import { NextPage } from "next"
-import { redirect, useRouter } from "next/navigation"
-import { useEffect, useTransition } from "react"
+import { useTransition } from "react"
 import { login } from "./actions"
-import { verifyToken } from "@/utils/jwt"
 
 const LoginPage: NextPage = () => {
   const [isPending, startTransition] = useTransition()
-  
-
   const signIn = async () => {
     const result = await signInWithPopup(auth, provider)
     const credential = GithubAuthProvider.credentialFromResult(result)
@@ -24,6 +19,8 @@ const LoginPage: NextPage = () => {
     if (!loginResult.ok) return // TODO: show an error alert
   }
 
+  
+
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <div className="w-full p-16 text-center">
@@ -33,7 +30,7 @@ const LoginPage: NextPage = () => {
           type="button"
           onClick={() => {
             startTransition(() => {
-              signIn()
+              return signIn()
             })
           }}
           className="flex flex-row items-center justify-center bg-black rounded-lg py-2 px-4 gap-x-3 w-full"
