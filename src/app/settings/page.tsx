@@ -1,6 +1,5 @@
 "use client"
 
-import { tokenAtom } from "@/utils/states"
 import { useAtom } from "jotai"
 import { NextPage } from "next"
 import  { useRouter } from "next/router"

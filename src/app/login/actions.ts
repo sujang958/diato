@@ -10,6 +10,7 @@ import { sign } from "jsonwebtoken"
 import { initializeApp } from "firebase/app"
 import { cookies } from "next/headers"
 import { jwtPayload, signToken } from "@/utils/jwt"
+import { redirect } from "next/navigation"
 
 const firebaseConfig = {
   apiKey: "AIzaSyBcrQBBq8CCVN_kVmAgiBdtqg5Nw5Hoh1U",
@@ -50,5 +51,12 @@ export async function login(accessToken: string): Promise<LoginReturnType> {
 
   if (typeof token == "object") return { ok: false, message: token.message }
 
-  return { ok: true, token }
+  cookies().set("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV == "production",
+  })
+
+  console.log("ok")
+
+  return redirect("/")
 }

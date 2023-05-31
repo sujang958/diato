@@ -8,12 +8,10 @@ import { redirect, useRouter } from "next/navigation"
 import { useEffect, useTransition } from "react"
 import { login } from "./actions"
 import { verifyToken } from "@/utils/jwt"
-import { tokenAtom } from "@/utils/states"
 
 const LoginPage: NextPage = () => {
   const [isPending, startTransition] = useTransition()
-  const [token, setToken] = useAtom(tokenAtom)
-  const router = useRouter()
+  
 
   const signIn = async () => {
     const result = await signInWithPopup(auth, provider)
@@ -24,13 +22,7 @@ const LoginPage: NextPage = () => {
     const loginResult = await login(credential.accessToken)
 
     if (!loginResult.ok) return // TODO: show an error alert
-
-    setToken(loginResult.token)
   }
-
-  useEffect(() => {
-    if (token) router.push("/")
-  }, [router, token])
 
   return (
     <div className="flex flex-col items-center justify-center h-full">

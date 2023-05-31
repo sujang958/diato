@@ -21,18 +21,21 @@ export const verifyToken = async (
   if (!RSA_PUBLIC) return { ok: false, message: "server fault" }
 
   try {
-    const jwtResult = superjson.parse(verify(token, RSA_PUBLIC).toString())
+    const jwtResult = superjson.parse(JSON.stringify(verify(token, RSA_PUBLIC)))
     const parseResult = jwtPayload.safeParse(jwtResult)
-    if (!parseResult.success) throw ReferenceError("Invalid token")
+    if (!parseResult.success) return { ok: false, message: "Invalid token" }
 
     return parseResult.data
   } catch (e) {
+    console.log(e)
     return { ok: false, message: "cannot verify the token" }
   }
 }
 
 export const signToken = async (id: bigint, email: string) => {
   if (!RSA_PRIVATE) return { ok: false, message: "server fault" }
+
+  console.log(RSA_PRIVATE)
 
   const token = sign(
     superjson.stringify({ id, email } satisfies jwtPayload),
