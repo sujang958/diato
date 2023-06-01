@@ -4,6 +4,7 @@ import { jwtPayload, verifyToken } from "@/utils/jwt"
 import { prisma } from "@/utils/prisma"
 import { ActionErrorResponse } from "@/utils/types"
 import { Todo } from "@prisma/client"
+import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
 
 // TODO: change this into a closure
@@ -41,16 +42,18 @@ export const updateTodo = async (
     return updatedTodo
   })
 
-export const addTodo = async (todoContent: string) =>
+export const addTodo = async () =>
   await userAction(async (user) => {
     const todo = await prisma.todo.create({
       data: {
         date: new Date(),
         finished: false,
-        todo: todoContent,
+        todo: "",
         author: { connect: { id: user.id } },
       },
     })
+
+    revalidatePath("/")
 
     return todo
   })
