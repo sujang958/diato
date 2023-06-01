@@ -1,16 +1,17 @@
 "use client"
 
-import { FC, useEffect, useState } from "react"
+import { FC } from "react"
 import DaySelectItem from "./DaySelectItem"
 import Link from "next/link"
-import { revalidatePath } from "next/cache"
+import { useAtom } from "jotai"
+import { dateAtom } from "@/utils/states"
 
 export type Days = "일" | "월" | "화" | "수" | "목" | "금" | "토"
 
 const dayArray: Days[] = ["일", "월", "화", "수", "목", "금", "토"]
 
 const DayHeader: FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date())
+  const [currentDate, setCurrentDate] = useAtom(dateAtom)
 
   return (
     <>

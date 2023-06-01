@@ -1,22 +1,9 @@
 "use server"
 
-import { jwtPayload, verifyToken } from "@/utils/jwt"
+import { userAction } from "@/utils/middleware"
 import { prisma } from "@/utils/prisma"
-import { ActionErrorResponse } from "@/utils/types"
 import { Todo } from "@prisma/client"
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
-
-// TODO: change this into a closure
-const userAction = async <T>(
-  action: (user: jwtPayload) => Promise<T | ActionErrorResponse>
-): Promise<ActionErrorResponse | T> => {
-  const user = await verifyToken(cookies().get("token")?.value ?? "")
-
-  if (!("id" in user)) return { ok: false, message: "로그인이 안 되어있습니다" }
-
-  return await action(user)
-}
 
 export const getTodos = async () =>
   await userAction(async (user) => {
@@ -25,17 +12,17 @@ export const getTodos = async () =>
     return todos
   })
 
-export const updateTodo = async (
-  todoId: bigint,
-  todo: Omit<Partial<Todo>, "id">
-) =>
+export const updateTodo = async (todo: Todo) =>
   await userAction(async (user) => {
-    const todo = await prisma.todo.findUnique({ where: { id: todoId } })
+    console.log(todo)
+    const _todo = await prisma.todo.findUnique({ where: { id: todo.id } })
 
-    if (!todo) return { ok: false, message: "To-do not found" }
+    if (!_todo) return { ok: false, message: "To-do not found" }
+    if (_todo.authorId !== user.id)
+      return { ok: false, message: "It's not your to-do" }
 
     const updatedTodo = await prisma.todo.update({
-      where: { id: todoId },
+      where: { id: todo.id },
       data: { ...todo },
     })
 

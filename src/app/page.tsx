@@ -14,11 +14,10 @@ export default async function Home() {
       <div className="py-5"></div>
       <div className="flex flex-col gap-y-3">
         {Array.isArray(todos)
-          ? todos.map((todo, i) => <TodoItem key={i} />)
+          ? todos.map((todo, i) => <TodoItem key={i} initialTodo={todo} />)
           : ""}
       </div>
       <TodoAddButton onClick={addTodo} />
-      {/* TODO: seperate to components */}
     </div>
   )
 }

@@ -35,8 +35,6 @@ export const verifyToken = async (
 export const signToken = async (id: bigint, email: string) => {
   if (!RSA_PRIVATE) return { ok: false, message: "server fault" }
 
-  console.log(RSA_PRIVATE)
-
   const token = sign(
     superjson.stringify({ id, email } satisfies jwtPayload),
     RSA_PRIVATE,
