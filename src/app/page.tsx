@@ -2,7 +2,7 @@
 
 import TodoAddButton from "@/components/TodoAddButton"
 import DayHeader from "@/components/DayHeader"
-import { addTodo, getTodos } from "./actions"
+import { addTodo, getTodos, removeTodo } from "./actions"
 import TodoItem from "@/components/TodoItem"
 
 export default async function Home() {
@@ -14,7 +14,13 @@ export default async function Home() {
       <div className="py-5"></div>
       <div className="flex flex-col gap-y-3">
         {Array.isArray(todos)
-          ? todos.map((todo, i) => <TodoItem key={i} initialTodo={todo} />)
+          ? todos.map((todo, i) => (
+              <TodoItem
+                key={i}
+                initialTodo={todo}
+                onRemove={removeTodo.bind(null, todo.id)}
+              />
+            ))
           : ""}
       </div>
       <TodoAddButton onClick={addTodo} />

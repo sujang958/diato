@@ -14,7 +14,6 @@ export const getTodos = async () =>
 
 export const updateTodo = async (todo: Todo) =>
   await userAction(async (user) => {
-    console.log(todo)
     const _todo = await prisma.todo.findUnique({ where: { id: todo.id } })
 
     if (!_todo) return { ok: false, message: "To-do not found" }
@@ -43,4 +42,19 @@ export const addTodo = async () =>
     revalidatePath("/")
 
     return todo
+  })
+
+export const removeTodo = async (todoId: bigint) =>
+  await userAction(async (user) => {
+    const _todo = await prisma.todo.findUnique({ where: { id: todoId } })
+
+    if (!_todo) return { ok: false, message: "To-do not found" }
+    if (_todo.authorId !== user.id)
+      return { ok: false, message: "It's not your to-do" }
+
+    await prisma.todo.delete({ where: { id: todoId } })
+
+    revalidatePath("/")
+
+    return { ok: true }
   })
