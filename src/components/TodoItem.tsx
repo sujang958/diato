@@ -18,9 +18,9 @@ function debounce(func: (...args: any[]) => any, delay: number) {
 
 const debouncedUpdateTodo = debounce((todo: Todo) => {
   updateTodo(todo).then((v) => console.log("Updated", v))
-}, 1000)
+}, 500)
 
-const TodoItem: FC<{ initialTodo: Todo; onRemove: () => any }> = ({
+const TodoItem: FC<{ initialTodo: Todo; onRemove: (id: bigint) => any }> = ({
   initialTodo,
   onRemove,
 }) => {
@@ -36,7 +36,7 @@ const TodoItem: FC<{ initialTodo: Todo; onRemove: () => any }> = ({
         className="absolute right-0"
         type="button"
         onClick={() => {
-          onRemove()
+          onRemove(todo.id)
         }}
       >
         <svg

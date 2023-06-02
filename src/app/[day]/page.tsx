@@ -22,7 +22,8 @@ export default async function Home({ params }: { params: { day: string } }) {
           <TodoItem
             key={i}
             initialTodo={todo}
-            onRemove={removeTodo.bind(null, todo.id)}
+            onRemove={removeTodo}
+            // TODO: fix removing a wrong to-do (maybe 모든 todo.id가 마지막 map의 id로 되기 떄문?)
           />
         ))}
       </div>
