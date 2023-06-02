@@ -26,7 +26,7 @@ export default async function Home({ params }: { params: { day: string } }) {
           />
         ))}
       </div>
-      <TodoAddButton onClick={addTodo} />
+      <TodoAddButton onClick={addTodo.bind(null, date)} />
     </div>
   )
 }

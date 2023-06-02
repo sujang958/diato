@@ -31,11 +31,11 @@ export const updateTodo = async (todo: Todo) =>
     return updatedTodo
   })
 
-export const addTodo = async () =>
+export const addTodo = async (date: Date) =>
   await userAction(async (user) => {
     const todo = await prisma.todo.create({
       data: {
-        date: new Date(),
+        date: new Date(dateToISODateFormat(date)),
         finished: false,
         todo: "",
         author: { connect: { id: user.id } },
