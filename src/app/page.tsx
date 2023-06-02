@@ -1,29 +1,10 @@
-"use server"
+import { verifyToken } from "@/utils/jwt"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
-import TodoAddButton from "@/components/TodoAddButton"
-import DayHeader from "@/components/DayHeader"
-import { addTodo, getTodos, removeTodo } from "./actions"
-import TodoItem from "@/components/TodoItem"
+export default async function IndexPage() {
+  const token = await verifyToken(cookies().get("token")?.value ?? "")
 
-export default async function Home() {
-  const todos = await getTodos()
-
-  return (
-    <div className="flex flex-col">
-      <DayHeader />
-      <div className="py-5"></div>
-      <div className="flex flex-col gap-y-3">
-        {Array.isArray(todos)
-          ? todos.map((todo, i) => (
-              <TodoItem
-                key={i}
-                initialTodo={todo}
-                onRemove={removeTodo.bind(null, todo.id)}
-              />
-            ))
-          : ""}
-      </div>
-      <TodoAddButton onClick={addTodo} />
-    </div>
-  )
+  if ("id" in token) return redirect(`/${Date.now()}`)
+  else return redirect(`/login`)
 }

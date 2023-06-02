@@ -1,6 +1,6 @@
 "use client"
 
-import { updateTodo } from "@/app/actions"
+import { updateTodo } from "@/app/[day]/actions"
 import { Todo } from "@prisma/client"
 import { FC, useEffect, useState } from "react"
 

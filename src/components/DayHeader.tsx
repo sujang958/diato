@@ -3,21 +3,17 @@
 import { FC } from "react"
 import DaySelectItem from "./DaySelectItem"
 import Link from "next/link"
-import { useAtom } from "jotai"
-import { dateAtom } from "@/utils/states"
 
 export type Days = "일" | "월" | "화" | "수" | "목" | "금" | "토"
 
 const dayArray: Days[] = ["일", "월", "화", "수", "목", "금", "토"]
 
-const DayHeader: FC = () => {
-  const [currentDate, setCurrentDate] = useAtom(dateAtom)
-
+export default async function DayHeader({ date }: { date: Date }) {
   return (
     <>
       <div className="flex flex-row items-center justify-between">
         <button className="text-4xl font-bold rounded-lg p-1" type="button">
-          {currentDate.getMonth()}월 {currentDate.getDate()}일
+          {date.getMonth()}월 {date.getDate()}일
         </button>
         <Link href="/settings" type="button" className="p-1">
           <svg
@@ -44,21 +40,18 @@ const DayHeader: FC = () => {
       <div className="py-3"></div>
       <div className="flex flex-row items-center gap-x-3 justify-between">
         {dayArray.map((day, i) => (
+          /* @ts-expect-error Async Server Component */
           <DaySelectItem
             key={i}
             day={day}
             badges={1}
-            onClick={() => {
-              setCurrentDate((previousDate) => {
-                const calculatedDate =
-                  previousDate.getTime() +
-                  (i - previousDate.getDay()) * 1000 * 60 * 60 * 24
-
-                return new Date(calculatedDate)
-              })
-            }}
+            date={
+              new Date(
+                date.getTime() + (i - date.getDay()) * 1000 * 60 * 60 * 24
+              )
+            }
             className={`${
-              i == currentDate.getDay() ? "bg-neutral-900 text-white" : ""
+              i == date.getDay() ? "bg-neutral-900 text-white" : ""
             }`}
           />
         ))}
@@ -66,5 +59,3 @@ const DayHeader: FC = () => {
     </>
   )
 }
-
-export default DayHeader

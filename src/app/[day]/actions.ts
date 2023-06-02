@@ -1,15 +1,18 @@
 "use server"
 
+import { dateToISODateFormat } from "@/utils/date"
 import { userAction } from "@/utils/middleware"
 import { prisma } from "@/utils/prisma"
 import { Todo } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 
-export const getTodos = async () =>
+export const getTodos = async (date: Date) =>
   await userAction(async (user) => {
     const todos = await prisma.todo.findMany({ where: { authorId: user.id } })
 
-    return todos
+    return todos.filter(
+      (todo) => dateToISODateFormat(todo.date) == dateToISODateFormat(date)
+    )
   })
 
 export const updateTodo = async (todo: Todo) =>

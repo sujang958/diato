@@ -1,19 +1,22 @@
-import { FC } from "react"
+import Link from "next/link"
 
 type DaySelectItemProps = {
   day: string
-  onClick: (...params: any[]) => any
+  date: Date
   badges?: number
   className?: string
 }
 
-const DaySelectItem: FC<DaySelectItemProps> = ({ day, className, onClick, badges }) => {
+export default async function DaySelectItem({
+  day,
+  className,
+  badges,
+  date,
+}: DaySelectItemProps) {
   return (
-    <button
+    <Link
+      href={`/${date.getTime()}`}
       type="button"
-      onClick={() => {
-        onClick()
-      }}
       className={`relative aspect-square rounded-xl bg-neutral-100 text-black w-8 h-8 grid place-items-center transition duration-200 ${
         className ?? ""
       }`}
@@ -27,8 +30,6 @@ const DaySelectItem: FC<DaySelectItemProps> = ({ day, className, onClick, badges
       )}
 
       <p className="text-base font-bold">{day}</p>
-    </button>
+    </Link>
   )
 }
-
-export default DaySelectItem
