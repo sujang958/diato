@@ -20,7 +20,7 @@ const debouncedUpdateTodo = debounce((todo: Todo) => {
   updateTodo(todo).then((v) => console.log("Updated", v))
 }, 500)
 
-const TodoItem: FC<{ initialTodo: Todo; onRemove: (id: bigint) => any }> = ({
+const TodoItem: FC<{ initialTodo: Todo; onRemove: () => any }> = ({
   initialTodo,
   onRemove,
 }) => {
@@ -36,7 +36,8 @@ const TodoItem: FC<{ initialTodo: Todo; onRemove: (id: bigint) => any }> = ({
         className="absolute right-0"
         type="button"
         onClick={() => {
-          onRemove(todo.id)
+          console.log("WhenRemoved", todo)
+          onRemove()
         }}
       >
         <svg
