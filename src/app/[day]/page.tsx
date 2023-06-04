@@ -10,6 +10,8 @@ export default async function Home({ params }: { params: { day: string } }) {
   const date = new Date(Number(params.day))
   const todos = await getTodos(date)
 
+  console.log("Todos", todos)
+
   if (!Array.isArray(todos)) return redirect("/login")
 
   return (
@@ -22,8 +24,7 @@ export default async function Home({ params }: { params: { day: string } }) {
           <TodoItem
             key={i}
             initialTodo={todo}
-            onRemove={removeTodo.bind(null, todo.id)}
-            // TODO: fix removing a wrong to-do (maybe 모든 todo.id가 마지막 map 루프의 todo.id로 되기 떄문?)
+            onRemove={removeTodo}
           />
         ))}
       </div>

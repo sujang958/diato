@@ -20,15 +20,17 @@ const debouncedUpdateTodo = debounce((todo: Todo) => {
   updateTodo(todo).then((v) => console.log("Updated", v))
 }, 500)
 
-const TodoItem: FC<{ initialTodo: Todo; onRemove: () => any }> = ({
+const TodoItem: FC<{ initialTodo: Todo; onRemove: (id: bigint) => any }> = ({
   initialTodo,
   onRemove,
 }) => {
-  const [todo, setTodo] = useState<Todo>(initialTodo)
+  const [todo, setTodo] = useState<Todo>({ ...initialTodo })
 
   useEffect(() => {
     debouncedUpdateTodo(todo)
   }, [todo])
+
+  // TODO: fix not listing right
 
   return (
     <div className="flex flex-row items-center gap-x-1 relative">
@@ -36,8 +38,8 @@ const TodoItem: FC<{ initialTodo: Todo; onRemove: () => any }> = ({
         className="absolute right-0"
         type="button"
         onClick={() => {
-          console.log("WhenRemoved", todo)
-          onRemove()
+          console.log(todo.id)
+          onRemove(todo.id)
         }}
       >
         <svg
