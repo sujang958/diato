@@ -10,8 +10,6 @@ export default async function Home({ params }: { params: { day: string } }) {
   const date = new Date(params.day)
   const todos = await getTodos(date)
 
-  console.log("Todos", todos)
-
   if (!Array.isArray(todos)) return redirect("/login")
 
   return (
