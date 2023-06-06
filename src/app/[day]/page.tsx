@@ -7,7 +7,7 @@ import TodoItem from "@/components/TodoItem"
 import { redirect } from "next/navigation"
 
 export default async function Home({ params }: { params: { day: string } }) {
-  const date = new Date(Number(params.day))
+  const date = new Date(params.day)
   const todos = await getTodos(date)
 
   console.log("Todos", todos)
@@ -23,8 +23,9 @@ export default async function Home({ params }: { params: { day: string } }) {
         {todos.map((todo, i) => (
           <TodoItem
             key={i}
+            date={date}
             initialTodo={todo}
-            onRemove={removeTodo}
+            onRemove={removeTodo.bind(null, todo.id)}
           />
         ))}
       </div>

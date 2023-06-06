@@ -20,26 +20,25 @@ const debouncedUpdateTodo = debounce((todo: Todo) => {
   updateTodo(todo).then((v) => console.log("Updated", v))
 }, 500)
 
-const TodoItem: FC<{ initialTodo: Todo; onRemove: (id: bigint) => any }> = ({
-  initialTodo,
-  onRemove,
-}) => {
+const TodoItem: FC<{
+  initialTodo: Todo
+  onRemove: (...args: any[]) => any
+  date: Date
+}> = ({ initialTodo, onRemove, date }) => {
   const [todo, setTodo] = useState<Todo>({ ...initialTodo })
 
   useEffect(() => {
     debouncedUpdateTodo(todo)
   }, [todo])
 
-  // TODO: fix not listing right
-
   return (
     <div className="flex flex-row items-center gap-x-1 relative">
       <button
-        className="absolute right-0"
+        className="absolute ml-2 right-0"
         type="button"
-        onClick={() => {
-          console.log(todo.id)
-          onRemove(todo.id)
+        onClick={async () => {
+          await onRemove()
+          location.reload() // TODO: try to remove this
         }}
       >
         <svg
@@ -69,7 +68,7 @@ const TodoItem: FC<{ initialTodo: Todo; onRemove: (id: bigint) => any }> = ({
       />
       <input
         type="text"
-        className="h-6 border-0 focus:ring-0"
+        className="h-6 w-full border-0 focus:ring-0"
         placeholder="할 일 적기"
         value={todo.todo}
         onInput={(event) => {

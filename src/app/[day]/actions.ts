@@ -57,7 +57,7 @@ export const removeTodo = async (todoId: bigint) =>
 
     await prisma.todo.delete({ where: { id: todoId } })
 
-    revalidatePath("/")
+    revalidatePath(`/[day]`)
 
     return { ok: true }
   })

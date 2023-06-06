@@ -13,7 +13,7 @@ export default async function DayHeader({ date }: { date: Date }) {
     <>
       <div className="flex flex-row items-center justify-between">
         <button className="text-4xl font-bold rounded-lg p-1" type="button">
-          {date.getMonth()}월 {date.getDate()}일
+          {date.getMonth() + 1}월 {date.getDate()}일
         </button>
         <Link href="/settings" type="button" className="p-1">
           <svg

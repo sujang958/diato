@@ -1,3 +1,4 @@
+import { dateToISODateFormat } from "@/utils/date"
 import Link from "next/link"
 
 type DaySelectItemProps = {
@@ -15,7 +16,7 @@ export default async function DaySelectItem({
 }: DaySelectItemProps) {
   return (
     <Link
-      href={`/${date.getTime()}`}
+      href={`/${dateToISODateFormat(date)}`}
       type="button"
       className={`relative aspect-square rounded-xl bg-neutral-100 text-black w-8 h-8 grid place-items-center transition duration-200 ${
         className ?? ""
