@@ -10,9 +10,9 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Todo" (
     "id" INT8 NOT NULL DEFAULT unique_rowid(),
-    "deadline" TIMESTAMP(3),
     "finished" BOOL NOT NULL,
-    "startDate" TIMESTAMP(3) NOT NULL,
+    "todo" STRING NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
     "authorId" INT8 NOT NULL,
 
     CONSTRAINT "Todo_pkey" PRIMARY KEY ("id")

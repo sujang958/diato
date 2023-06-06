@@ -1,3 +1,5 @@
+"use client"
+
 import { initializeApp } from "firebase/app"
 import { GithubAuthProvider, getAuth } from "firebase/auth"
 
@@ -13,9 +15,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-export const provider = new GithubAuthProvider()
-
-provider.addScope("read:user")
-provider.addScope("read:email")
-
 export const auth = getAuth()
+export const provider = new GithubAuthProvider()
