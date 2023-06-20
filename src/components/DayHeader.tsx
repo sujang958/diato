@@ -3,12 +3,19 @@
 import { FC } from "react"
 import DaySelectItem from "./DaySelectItem"
 import Link from "next/link"
+import { dateToISODateFormat } from "@/utils/date"
 
 export type Days = "일" | "월" | "화" | "수" | "목" | "금" | "토"
 
 const dayArray: Days[] = ["일", "월", "화", "수", "목", "금", "토"]
 
-export default async function DayHeader({ date }: { date: Date }) {
+export default async function DayHeader({
+  date,
+  todosAmount,
+}: {
+  date: Date
+  todosAmount: { [key: string]: number }
+}) {
   return (
     <>
       <div className="flex flex-row items-center justify-between">
@@ -39,22 +46,25 @@ export default async function DayHeader({ date }: { date: Date }) {
       </div>
       <div className="py-3"></div>
       <div className="flex flex-row items-center gap-x-3 justify-between">
-        {dayArray.map((day, i) => (
-          /* @ts-expect-error Async Server Component */
-          <DaySelectItem
-            key={i}
-            day={day}
-            badges={1}
-            date={
-              new Date(
-                date.getTime() + (i - date.getDay()) * 1000 * 60 * 60 * 24
-              )
-            }
-            className={`${
-              i == date.getDay() ? "bg-neutral-900 text-white" : ""
-            }`}
-          />
-        ))}
+        {dayArray
+          .map((dayName, i) => ({
+            dayName,
+            dateOfDay: new Date(
+              date.getTime() + (i - date.getDay()) * 1000 * 60 * 60 * 24
+            ),
+          }))
+          .map(({ dayName: name, dateOfDay }, i) => (
+            /* @ts-expect-error Async Server Component */
+            <DaySelectItem
+              key={i}
+              day={name}
+              badges={todosAmount[dateToISODateFormat(dateOfDay)]}
+              date={dateOfDay}
+              className={`${
+                i == date.getDay() ? "bg-neutral-900 text-white" : ""
+              }`}
+            />
+          ))}
       </div>
     </>
   )

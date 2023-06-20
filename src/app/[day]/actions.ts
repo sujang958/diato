@@ -15,6 +15,31 @@ export const getTodos = async (date: Date) =>
     )
   })
 
+export const getTodosAmount = async (date: Date) =>
+  await userAction(async (user) => {
+    const startOfWeek = new Date(Date.now() - date.getDay() * 86400000)
+
+    const foundTodos = await prisma.todo.findMany({
+      where: {
+        date: {
+          gte: startOfWeek,
+          lte: new Date(startOfWeek.getTime() + 7 * 86400000),
+        },
+        authorId: user.id,
+      },
+    })
+
+    const sortedTodos: { [key: string]: number } = {}
+
+    foundTodos.forEach((todo) => {
+      const date = dateToISODateFormat(todo.date)
+      sortedTodos[date] ??= 0
+      sortedTodos[date] += 1
+    })
+
+    return sortedTodos
+  })
+
 export const updateTodo = async (todo: Todo) =>
   await userAction(async (user) => {
     const _todo = await prisma.todo.findUnique({ where: { id: todo.id } })
