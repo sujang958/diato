@@ -13,8 +13,6 @@ export default async function Home({ params }: { params: { day: string } }) {
 
   if (!Array.isArray(todos)) return redirect("/login")
 
-  console.log(todosAmount)
-
   return (
     <div className="flex flex-col">
       {/* @ts-expect-error Async Server Component */}
