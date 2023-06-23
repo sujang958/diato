@@ -17,13 +17,14 @@ export const getTodos = async (date: Date) =>
 
 export const getTodosAmount = async (date: Date) =>
   await userAction(async (user) => {
-    const startOfWeek = new Date(Date.now() - date.getDay() * 86400000)
+    const startOfWeek = new Date(date.getTime() - date.getUTCDay() * 86400000)
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 86400000)
 
     const foundTodos = await prisma.todo.findMany({
       where: {
         date: {
           gte: startOfWeek,
-          lte: new Date(startOfWeek.getTime() + 7 * 86400000),
+          lte: endOfWeek,
         },
         authorId: user.id,
       },

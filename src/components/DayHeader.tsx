@@ -1,6 +1,5 @@
 "use client"
 
-import { FC } from "react"
 import DaySelectItem from "./DaySelectItem"
 import Link from "next/link"
 import { dateToISODateFormat } from "@/utils/date"
