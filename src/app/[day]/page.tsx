@@ -21,7 +21,7 @@ export default async function Home({ params }: { params: { day: string } }) {
       <div className="flex flex-col gap-y-3">
         {todos.map((todo, i) => (
           <TodoItem
-            key={i}
+            key={crypto.randomUUID()}
             date={todo.date}
             initialTodo={todo}
             onRemove={removeTodo.bind(null, todo.id)}

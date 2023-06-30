@@ -38,7 +38,6 @@ const TodoItem: FC<{
         type="button"
         onClick={async () => {
           await onRemove()
-          location.reload()
         }}
       >
         <svg

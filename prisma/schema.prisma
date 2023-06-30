@@ -11,17 +11,25 @@ datasource db {
 }
 
 model User {
-  id    BigInt @id @default(autoincrement())
-  email String @unique
-  name  String
-  todos Todo[]
+  id          BigInt       @id @default(autoincrement())
+  email       String       @unique
+  name        String
+  todos       Todo[]
+  sharedTodos SharedTodo[]
 }
 
 model Todo {
-  id        BigInt    @id @default(autoincrement())
-  finished  Boolean
-  todo    String
-  date    DateTime 
-  author   User   @relation(references: [id], fields: [authorId])
+  id       BigInt   @id @default(autoincrement())
+  finished Boolean
+  todo     String
+  date     DateTime
+  author   User     @relation(references: [id], fields: [authorId])
   authorId BigInt
+}
+
+model SharedTodo {
+  id       BigInt   @id @default(autoincrement())
+  author   User     @relation(references: [id], fields: [authorId])
+  authorId BigInt
+  date     DateTime
 }
