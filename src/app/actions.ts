@@ -112,6 +112,7 @@ export const getSharedTodos = async (id: bigint) =>
   await userAction(async (user) => {
     const sharedTodo = await prisma.sharedTodo.findFirst({
       where: { authorId: user.id, id },
+      include: { author: true },
     })
 
     if (!sharedTodo) return { ok: false, message: "Not found" }
@@ -128,5 +129,11 @@ export const getSharedTodos = async (id: bigint) =>
       },
     })
 
-    return {todos: sharedTodos, date: sharedTodo.date} ?? []
+    return (
+      {
+        todos: sharedTodos,
+        date: sharedTodo.date,
+        author: sharedTodo.author,
+      } ?? []
+    )
   })

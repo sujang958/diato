@@ -12,17 +12,20 @@ export default async function TodoDisplay({
   addButtonShown = true,
   dayHeaderOption,
   todoDeletable = true,
+  between,
 }: {
   date: Date
   todos: Todo[]
   addButtonShown?: boolean
   dayHeaderOption: Omit<Parameters<typeof DayHeader>[0], "date">
   todoDeletable?: boolean
+  between?: any
 }) {
   return (
     <div className="flex flex-col">
       {/* @ts-expect-error Async Server Component */}
       <DayHeader date={date} {...dayHeaderOption} />
+      {between ?? ""}
       <div className="py-5"></div>
       <div className="flex flex-col gap-y-3">
         {todos.map((todo) => (

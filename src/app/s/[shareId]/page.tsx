@@ -19,7 +19,7 @@ export default async function SharedTodoPage({
 
   if ("ok" in sharedTodos) return redirect("/")
 
-  const { todos, date } = sharedTodos
+  const { todos, date, author } = sharedTodos
 
   return (
     <>
@@ -35,6 +35,11 @@ export default async function SharedTodoPage({
         }}
         addButtonShown={false}
         todoDeletable={false}
+        between={
+          <p className="text-sm text-neutral-600">
+            {author.email}님의 리스트입니다
+          </p>
+        }
       />
       <div className="fixed bottom-16 left-0 flex w-full flex-col items-center justify-center">
         <div className="flex w-full max-w-md flex-row items-center justify-end px-10">
