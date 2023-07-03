@@ -40,13 +40,18 @@ export default async function DayHeader({
             className="fixed bottom-0 left-0 right-0 top-0 z-50 grid h-screen place-items-center bg-black/60 p-4 backdrop-blur"
             onClick={(event) => {
               if (!(event.target instanceof HTMLElement)) return
-              if (event.target.closest("#rdb-root")) return
+              if (event.target.closest("#rdp-root")) return
 
               setCalendarOpen(false)
             }}
           >
+            <style>
+              {`.rdp {
+                  --rdp-accent-color: #000;
+              }`}
+            </style>
             <DayPicker
-              id="rdb-root"
+              id="rdp-root"
               mode="single"
               selected={date}
               onSelect={(selectedDate) => {
