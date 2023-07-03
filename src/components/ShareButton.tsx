@@ -1,8 +1,10 @@
 "use client"
 
-import { FC, useId, useState } from "react"
+import { shareTodos } from "@/app/[day]/actions"
+import { FC, useState, useTransition } from "react"
+import toast from "react-hot-toast"
 
-const ShareButton: FC = () => {
+const ShareButton: FC<{ date: Date }> = ({ date }) => {
   const [alertShown, setAlertShown] = useState(false)
 
   return (
@@ -55,8 +57,22 @@ const ShareButton: FC = () => {
             <button
               className="rounded-lg bg-black px-3 py-1.5 text-xs font-semibold text-white"
               onClick={() => {
-                // TODO: add a login that shares to-dos
-                navigator.clipboard.writeText("sex")
+                shareTodos(date).then(async (result) => {
+                  if (typeof result == "bigint") {
+                    await navigator.clipboard.writeText(
+                      `https://diato.vercel.app/s/${result}`
+                    )
+                    toast.success("링크가 복사되었습니다!", {
+                      className: "font-semibold",
+                    })
+                  } else {
+                    toast.error(
+                      "에러가 발생했습니다! 새로고침 후 다시 시도해 주세요"
+                    )
+                  }
+
+                  setAlertShown(false)
+                })
               }}
             >
               확인

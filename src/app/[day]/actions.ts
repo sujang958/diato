@@ -87,3 +87,23 @@ export const removeTodo = async (todoId: bigint) =>
 
     return { ok: true }
   })
+
+export const shareTodos = async (date: Date) =>
+  await userAction(async (user) => {
+    const startOfDate = new Date(dateToISODateFormat(date))
+    const endOfDate = new Date(startOfDate.getTime())
+
+    endOfDate.setHours(23, 59, 59, 999)
+
+    const sharedTodo = await prisma.sharedTodo.findFirst({
+      where: { authorId: user.id, date: { lte: endOfDate, gte: startOfDate } },
+    })
+
+    if (sharedTodo) return sharedTodo.id
+
+    const newSharedTodo = await prisma.sharedTodo.create({
+      data: { date: date, author: { connect: { id: user.id } } },
+    })
+
+    return newSharedTodo.id
+  })

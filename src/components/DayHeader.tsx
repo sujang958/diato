@@ -34,7 +34,7 @@ export default async function DayHeader({
         >
           {date.getMonth() + 1}월 {date.getDate()}일
         </button>
-        <ShareButton />
+        <ShareButton date={date} />
         {calendarOpen && (
           <div
             className="fixed bottom-0 left-0 right-0 top-0 z-50 grid h-screen place-items-center bg-black/60 p-4 backdrop-blur"
