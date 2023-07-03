@@ -1,11 +1,13 @@
 "use client"
 
-import { FC } from "react"
+import { FC, useId, useState } from "react"
 
 const ShareButton: FC = () => {
+  const [alertShown, setAlertShown] = useState(false)
+
   return (
     <>
-      <button type="button" className="p-1">
+      <button type="button" className="p-1" onClick={() => setAlertShown(true)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -20,20 +22,40 @@ const ShareButton: FC = () => {
           />
         </svg>
       </button>
-      <div className="hidden fixed bottom-0 left-0 right-0 top-0 z-50 grid h-screen place-items-center bg-black/60 p-12 backdrop-blur">
-        <div className="flex w-full max-w-xs flex-col gap-y-2 rounded-lg border border-neutral-500 bg-white px-6 py-4">
+      <div
+        onClick={(event) => {
+          if (!(event.target instanceof HTMLElement)) return
+          if (event.target.closest(`#share-alert-root`)) return
+
+          setAlertShown(false)
+        }}
+        className={`fixed bottom-0 left-0 right-0 top-0 z-50 ${
+          alertShown ? "grid" : "hidden"
+        } h-screen place-items-center bg-black/60 p-12 backdrop-blur transition duration-1000`}
+      >
+        <div
+          id="share-alert-root"
+          className="flex w-full max-w-xs flex-col gap-y-2 rounded-lg border border-neutral-500 bg-white px-6 py-4"
+        >
           <p className="text-xl font-bold">공유하기</p>
           <p className="text-xs text-neutral-500">
             링크가 있는 모든 사용자들이 할 일 목록을 볼 수 있게 됩니다.
           </p>
           <div className="py-0.5"></div>
           <div className="flex flex-row items-center justify-end gap-x-2">
-            <button className="rounded-lg border border-neutral-400 px-3 py-1.5 text-xs font-semibold">
+            <button
+              className="rounded-lg border border-neutral-400 px-3 py-1.5 text-xs font-semibold"
+              onClick={() => {
+                // TODO: add a login that cancels sharing to-dos
+                setAlertShown(false)
+              }}
+            >
               공유 취소
             </button>
             <button
               className="rounded-lg bg-black px-3 py-1.5 text-xs font-semibold text-white"
               onClick={() => {
+                // TODO: add a login that shares to-dos
                 navigator.clipboard.writeText("sex")
               }}
             >
