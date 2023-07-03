@@ -1,15 +1,7 @@
 "use client"
 
-import Lottie from "lottie-react"
+import Loading from "@/components/Loading"
 
-export default function Loading() {
-  return (
-    <div className="h-full w-full grid place-items-center">
-      <Lottie
-        animationData={require("../../../public/lotties/loading.json")}
-        loop={true}
-        className="w-8 h-8"
-      />
-    </div>
-  )
+export default function LoadingPage() {
+  return <Loading className="bg-transparent" />
 }
