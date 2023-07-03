@@ -17,13 +17,14 @@ export const getTodos = async (date: Date) =>
 
 export const getTodosAmount = async (date: Date) =>
   await userAction(async (user) => {
-    const startOfWeek = new Date(Date.now() - date.getDay() * 86400000)
+    const startOfWeek = new Date(date.getTime() - date.getUTCDay() * 86400000)
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 86400000)
 
     const foundTodos = await prisma.todo.findMany({
       where: {
         date: {
           gte: startOfWeek,
-          lte: new Date(startOfWeek.getTime() + 7 * 86400000),
+          lte: endOfWeek,
         },
         authorId: user.id,
       },
@@ -85,4 +86,54 @@ export const removeTodo = async (todoId: bigint) =>
     revalidatePath(`/[day]`)
 
     return { ok: true }
+  })
+
+export const shareTodos = async (date: Date) =>
+  await userAction(async (user) => {
+    const startOfDate = new Date(dateToISODateFormat(date))
+    const endOfDate = new Date(startOfDate.getTime())
+
+    endOfDate.setHours(23, 59, 59, 999)
+
+    const sharedTodo = await prisma.sharedTodo.findFirst({
+      where: { authorId: user.id, date: { lte: endOfDate, gte: startOfDate } },
+    })
+
+    if (sharedTodo) return sharedTodo.id
+
+    const newSharedTodo = await prisma.sharedTodo.create({
+      data: { date: date, author: { connect: { id: user.id } } },
+    })
+
+    return newSharedTodo.id
+  })
+
+export const getSharedTodos = async (id: bigint) =>
+  await userAction(async (user) => {
+    const sharedTodo = await prisma.sharedTodo.findFirst({
+      where: { authorId: user.id, id },
+      include: { author: true },
+    })
+
+    if (!sharedTodo) return { ok: false, message: "Not found" }
+
+    const startOfDate = new Date(dateToISODateFormat(sharedTodo.date))
+    const endOfDate = new Date(startOfDate.getTime())
+
+    endOfDate.setHours(23, 59, 59, 999)
+
+    const sharedTodos = await prisma.todo.findMany({
+      where: {
+        authorId: sharedTodo.authorId,
+        date: { gte: startOfDate, lte: endOfDate },
+      },
+    })
+
+    return (
+      {
+        todos: sharedTodos,
+        date: sharedTodo.date,
+        author: sharedTodo.author,
+      } ?? []
+    )
   })

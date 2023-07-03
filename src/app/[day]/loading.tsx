@@ -1,3 +1,7 @@
-export default function Loading() {
-  return "Loading..." // TODO: add something cool
+"use client"
+
+import Loading from "@/components/Loading"
+
+export default function LoadingPage() {
+  return <Loading className="bg-transparent" />
 }

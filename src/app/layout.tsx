@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast"
 import "./globals.css"
 
 export const metadata = {
@@ -13,7 +14,8 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="flex flex-col items-center font-pretendard">
-        <div className="max-w-md w-full py-20 px-8 h-screen">{children}</div>
+        <div className="h-screen w-full max-w-md px-8 py-20">{children}</div>
+        <Toaster />
       </body>
     </html>
   )
