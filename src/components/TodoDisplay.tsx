@@ -13,12 +13,14 @@ export default async function TodoDisplay({
   dayHeaderOption,
   todoDeletable = true,
   between,
+  todoEditable = true,
 }: {
   date: Date
   todos: Todo[]
   addButtonShown?: boolean
   dayHeaderOption: Omit<Parameters<typeof DayHeader>[0], "date">
   todoDeletable?: boolean
+  todoEditable?: boolean
   between?: any
 }) {
   return (
@@ -31,8 +33,8 @@ export default async function TodoDisplay({
         {todos.map((todo) => (
           <TodoItem
             key={crypto.randomUUID()}
-            date={todo.date}
             initialTodo={todo}
+            editable={todoEditable}
             onRemove={
               todoDeletable ? removeTodo.bind(null, todo.id) : undefined
             }

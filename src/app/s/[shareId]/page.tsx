@@ -35,6 +35,7 @@ export default async function SharedTodoPage({
         }}
         addButtonShown={false}
         todoDeletable={false}
+        todoEditable={false}
         between={
           <p className="text-sm text-neutral-600">
             {author.email}님의 리스트입니다
