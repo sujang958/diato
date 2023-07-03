@@ -107,3 +107,26 @@ export const shareTodos = async (date: Date) =>
 
     return newSharedTodo.id
   })
+
+export const getSharedTodos = async (id: bigint) =>
+  await userAction(async (user) => {
+    const sharedTodo = await prisma.sharedTodo.findFirst({
+      where: { authorId: user.id, id },
+    })
+
+    if (!sharedTodo) return { ok: false, message: "Not found" }
+
+    const startOfDate = new Date(dateToISODateFormat(sharedTodo.date))
+    const endOfDate = new Date(startOfDate.getTime())
+
+    endOfDate.setHours(23, 59, 59, 999)
+
+    const sharedTodos = await prisma.todo.findMany({
+      where: {
+        authorId: sharedTodo.authorId,
+        date: { gte: startOfDate, lte: endOfDate },
+      },
+    })
+
+    return {todos: sharedTodos, date: sharedTodo.date} ?? []
+  })

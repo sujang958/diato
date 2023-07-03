@@ -1,6 +1,6 @@
 "use client"
 
-import { shareTodos } from "@/app/[day]/actions"
+import { shareTodos } from "@/app/actions"
 import { FC, useState, useTransition } from "react"
 import toast from "react-hot-toast"
 
