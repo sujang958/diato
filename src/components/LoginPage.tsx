@@ -1,8 +1,10 @@
 "use client"
 
 import { login } from "@/app/login/actions"
+import { dateToISODateFormat } from "@/utils/date"
 import { auth, provider } from "@/utils/firebase"
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth"
+import { redirect } from "next/navigation"
 import { FC } from "react"
 import { toast } from "react-hot-toast"
 
@@ -16,6 +18,8 @@ const ClientLoginPage: FC = () => {
     const loginResult = await login(credential.accessToken)
 
     if (!loginResult.ok) return toast.error("서버에서 오류가 발생했습니다!")
+
+    redirect(`/${dateToISODateFormat(new Date())}`)
   }
 
   return (

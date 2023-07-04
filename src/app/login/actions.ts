@@ -6,10 +6,9 @@ import {
   getAuth,
   signInWithCredential,
 } from "firebase/auth"
-import { sign } from "jsonwebtoken"
 import { initializeApp } from "firebase/app"
 import { cookies } from "next/headers"
-import { jwtPayload, signToken } from "@/utils/jwt"
+import { signToken } from "@/utils/jwt"
 import { redirect } from "next/navigation"
 
 const firebaseConfig = {
@@ -24,9 +23,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig)
 
-type LoginReturnType =
-  | { ok: false; message: string }
-  | { ok: true; token: string }
+type LoginReturnType = { ok: false; message: string } | { ok: true }
 
 export async function login(accessToken: string): Promise<LoginReturnType> {
   if (cookies().get("token")?.value) return redirect("/")
@@ -58,5 +55,5 @@ export async function login(accessToken: string): Promise<LoginReturnType> {
     secure: process.env.NODE_ENV == "production",
   })
 
-  redirect("/")
+  return { ok: true }
 }
