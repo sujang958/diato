@@ -13,7 +13,7 @@ const TodoAddButton: FC<{ onClick: () => any }> = ({ onClick }) => {
         <div className="flex w-full max-w-md flex-row items-center justify-end px-10">
           <button
             type="button"
-            className="rounded-full bg-black p-3"
+            className="rounded-full bg-black p-3.5"
             onClick={async () => {
               setLoadingShown(true)
               await onClick()
@@ -26,7 +26,7 @@ const TodoAddButton: FC<{ onClick: () => any }> = ({ onClick }) => {
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="white"
-              className="h-5 w-5"
+              className="h-6 w-6"
             >
               <path
                 strokeLinecap="round"
