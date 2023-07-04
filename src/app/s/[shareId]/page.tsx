@@ -1,7 +1,5 @@
 import { getSharedTodos } from "@/app/actions"
 import TodoItem from "@/components/TodoItem"
-import { dateToISODateFormat } from "@/utils/date"
-import Link from "next/link"
 import { redirect } from "next/navigation"
 
 export default async function SharedTodoPage({
