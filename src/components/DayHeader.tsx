@@ -15,15 +15,9 @@ const dayArray: Days[] = ["일", "월", "화", "수", "목", "금", "토"]
 export default async function DayHeader({
   date,
   todosAmount,
-  dateEditable = false,
-  sharable = true,
-  dayShown = true,
 }: {
   date: Date
   todosAmount: { [key: string]: number } // { '2023-01-11': 11 }
-  dateEditable?: boolean
-  sharable?: boolean
-  dayShown?: boolean
 }) {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const router = useRouter()
@@ -38,11 +32,10 @@ export default async function DayHeader({
             setCalendarOpen((prev) => !prev)
           }}
         >
-          {date.getMonth() + 1}월 {date.getDate()}일{" "}
-          {!dayShown && dayArray[date.getDay()]}
+          {date.getMonth() + 1}월 {date.getDate()}일
         </button>
-        {sharable && <ShareButton date={date} />}
-        {calendarOpen && dateEditable && (
+        <ShareButton date={date} />
+        {calendarOpen && (
           <div
             className="fixed bottom-0 left-0 right-0 top-0 z-50 grid h-screen place-items-center bg-black/60 p-4 backdrop-blur"
             onClick={(event) => {
@@ -87,29 +80,27 @@ export default async function DayHeader({
         )}
       </div>
       <div className="py-3"></div>
-      {dayShown && (
-        <div className="flex flex-row items-center justify-between gap-x-3">
-          {dayArray
-            .map((dayName, i) => ({
-              dayName,
-              dateOfDay: new Date(
-                date.getTime() + (i - date.getDay()) * 1000 * 60 * 60 * 24
-              ),
-            }))
-            .map(({ dayName: name, dateOfDay }, i) => (
-              /* @ts-expect-error Async Server Component */
-              <DaySelectItem
-                key={i}
-                day={name}
-                badges={todosAmount[dateToISODateFormat(dateOfDay)]}
-                date={dateOfDay}
-                className={`${
-                  i == date.getDay() ? "bg-neutral-900 text-white" : ""
-                }`}
-              />
-            ))}
-        </div>
-      )}
+      <div className="flex flex-row items-center justify-between gap-x-3">
+        {dayArray
+          .map((dayName, i) => ({
+            dayName,
+            dateOfDay: new Date(
+              date.getTime() + (i - date.getDay()) * 1000 * 60 * 60 * 24
+            ),
+          }))
+          .map(({ dayName: name, dateOfDay }, i) => (
+            /* @ts-expect-error Async Server Component */
+            <DaySelectItem
+              key={i}
+              day={name}
+              badges={todosAmount[dateToISODateFormat(dateOfDay)]}
+              date={dateOfDay}
+              className={`${
+                i == date.getDay() ? "bg-neutral-900 text-white" : ""
+              }`}
+            />
+          ))}
+      </div>
     </>
   )
 }
