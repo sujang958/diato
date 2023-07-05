@@ -1,7 +1,9 @@
 "use client"
 
 import { updateTodo } from "@/app/actions"
+import { inLoadingAtom } from "@/utils/atoms"
 import { Todo } from "@prisma/client"
+import { useSetAtom } from "jotai"
 import { FC, useEffect, useState } from "react"
 
 function debounce(func: (...args: any[]) => any, delay: number) {
@@ -18,7 +20,7 @@ function debounce(func: (...args: any[]) => any, delay: number) {
 
 const debouncedUpdateTodo = debounce((todo: Todo) => {
   updateTodo(todo).then((v) => console.log("Updated", v))
-}, 200)
+}, 100)
 
 const TodoItem: FC<{
   initialTodo: Todo
@@ -26,6 +28,7 @@ const TodoItem: FC<{
   editable?: boolean
 }> = ({ initialTodo, onRemove, editable = true }) => {
   const [todo, setTodo] = useState<Todo>({ ...initialTodo })
+  const setInLoading = useSetAtom(inLoadingAtom)
 
   useEffect(() => {
     debouncedUpdateTodo(todo)
@@ -38,7 +41,9 @@ const TodoItem: FC<{
           className="absolute right-0 ml-2"
           type="button"
           onClick={async () => {
+            setInLoading(true)
             await onRemove()
+            setInLoading(false)
           }}
         >
           <svg

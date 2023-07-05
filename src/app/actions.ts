@@ -68,7 +68,7 @@ export const addTodo = async (date: Date) =>
       },
     })
 
-    revalidatePath("/")
+    revalidatePath("/[day]")
 
     return todo
   })

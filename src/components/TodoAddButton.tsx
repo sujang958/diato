@@ -1,23 +1,25 @@
 "use client"
 
-import { FC, useState } from "react"
-import Loading from "./Loading"
+import { inLoadingAtom } from "@/utils/atoms"
+import { useSetAtom } from "jotai"
+import { FC } from "react"
 
-const TodoAddButton: FC<{ onClick: () => any }> = ({ onClick }) => {
-  const [loadingShown, setLoadingShown] = useState(false)
+const TodoAddButton: FC<{ onClick: (...args: any[]) => any }> = ({
+  onClick,
+}) => {
+  const setInLoading = useSetAtom(inLoadingAtom)
 
   return (
     <>
-      {loadingShown && <Loading className="z-50" />}
       <div className="fixed bottom-16 left-0 flex w-full flex-col items-center justify-center">
         <div className="flex w-full max-w-md flex-row items-center justify-end px-10">
           <button
             type="button"
             className="rounded-full bg-black p-3.5"
             onClick={async () => {
-              setLoadingShown(true)
+              setInLoading(true)
               await onClick()
-              setLoadingShown(false)
+              setInLoading(false)
             }}
           >
             <svg
