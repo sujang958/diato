@@ -3,7 +3,7 @@
 import { dateToISODateFormat } from "@/utils/date"
 import { userAction } from "@/utils/middleware"
 import { prisma } from "@/utils/prisma"
-import { Todo } from "@prisma/client"
+import { Todo, User } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 
 export const getTodos = async (date: Date) =>
@@ -136,4 +136,9 @@ export const getSharedTodos = async (id: bigint) =>
         author: sharedTodo.author,
       } ?? []
     )
+  })
+
+export const getUser = async () =>
+  await userAction(async (user) => {
+    return user
   })
