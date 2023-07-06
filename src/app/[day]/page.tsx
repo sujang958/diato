@@ -28,15 +28,23 @@ export default async function Home({ params }: { params: { day: string } }) {
         todosAmount={"ok" in todosAmount ? {} : todosAmount}
       />
       <div className="py-5"></div>
-      <div className="flex flex-col gap-y-3">
-        {todos.map((todo) => (
-          <TodoItem
-            key={crypto.randomUUID()}
-            initialTodo={todo}
-            onRemove={removeTodo.bind(null, todo.id)}
-          />
-        ))}
-      </div>
+      {
+        <div className="flex flex-col gap-y-3">
+          {todos.map((todo) => (
+            <TodoItem
+              key={crypto.randomUUID()}
+              initialTodo={todo}
+              onRemove={removeTodo.bind(null, todo.id)}
+            />
+          ))}
+        </div>
+      }
+
+      {/* TODO: add this <div className="grid grow place-items-center text-center gap-y-1">
+          <p className="text-xl font-semibold">아직 아무 할 일도 없네요..</p>
+          <p className="text-neutral-500 text-sm">+ 버튼을 눌러 추가해 보세요!</p>
+        </div> */}
+
       <TodoAddButton onClick={addTodo.bind(null, date)} />
     </div>
   )
