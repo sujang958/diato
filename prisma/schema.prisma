@@ -28,8 +28,9 @@ model Todo {
 }
 
 model SharedTodo {
-  id       BigInt   @id @default(autoincrement())
-  author   User     @relation(references: [id], fields: [authorId])
-  authorId BigInt
-  date     DateTime
+  id        BigInt   @id @default(autoincrement())
+  author    User     @relation(references: [id], fields: [authorId])
+  authorId  BigInt
+  date      DateTime
+  createdAt DateTime @default(now())
 }

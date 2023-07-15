@@ -98,7 +98,7 @@ export default async function DayHeader({
         )}
       </div>
       <div className="py-3"></div>
-      <div className="flex flex-row items-center justify-between gap-x-3">
+      <div className="flex flex-row items-center justify-between gap-x-2.5">
         {dayArray
           .map((dayName, i) => ({
             dayName,

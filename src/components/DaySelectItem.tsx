@@ -18,7 +18,7 @@ export default async function DaySelectItem({
     <Link
       href={`/${dateToISODateFormat(date)}`}
       type="button"
-      className={`relative aspect-square rounded-xl bg-neutral-100 text-black w-8 h-8 grid place-items-center transition duration-200 ${
+      className={`relative rounded-xl bg-neutral-100 text-black w-8 h-8 grid place-items-center transition duration-200 ${
         className ?? ""
       }`}
     >

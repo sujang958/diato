@@ -102,8 +102,13 @@ export const shareTodos = async (date: Date) =>
     if (sharedTodo) return sharedTodo.id
 
     const newSharedTodo = await prisma.sharedTodo.create({
-      data: { date: date, author: { connect: { id: user.id } } },
+      data: {
+        date: date,
+        author: { connect: { id: user.id } },
+      },
     })
+
+    console.log(newSharedTodo)
 
     return newSharedTodo.id
   })
@@ -158,7 +163,12 @@ export const revokeSharedTodos = async (date: Date) =>
     return { ok: true }
   })
 
-export const getUser = async () =>
-  await userAction(async (user) => {
-    return user
-  })
+export const getSharedTodosList = async () =>
+  await userAction(
+    async (user) =>
+      await prisma.sharedTodo.findMany({
+        where: { authorId: user.id },
+      })
+  )
+
+export const getUser = async () => await userAction(async (user) => user)
