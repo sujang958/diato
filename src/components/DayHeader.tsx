@@ -7,6 +7,7 @@ import { DayPicker, Row } from "react-day-picker"
 import "react-day-picker/dist/style.css"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import Link from "next/link"
 
 export type Days = "일" | "월" | "화" | "수" | "목" | "금" | "토"
 
@@ -34,7 +35,24 @@ export default async function DayHeader({
         >
           {date.getMonth() + 1}월 {date.getDate()}일
         </button>
-        <ShareButton date={date} />
+        <div className="item flex flex-row gap-x-6">
+          <ShareButton date={date} />
+          <Link href="/me" className="p-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              className="h-5 w-5 stroke-neutral-800"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+          </Link>
+        </div>
         {calendarOpen && (
           <div
             className="fixed bottom-0 left-0 right-0 top-0 z-50 grid h-screen place-items-center bg-black/60 p-4 backdrop-blur"

@@ -1,9 +1,9 @@
 "use server"
 
-import { dateToISODateFormat } from "@/utils/date"
+import { dateToISODateFormat, getDateDuration } from "@/utils/date"
 import { userAction } from "@/utils/middleware"
 import { prisma } from "@/utils/prisma"
-import { Todo } from "@prisma/client"
+import { Todo, User } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 
 export const getTodos = async (date: Date) =>
@@ -68,7 +68,7 @@ export const addTodo = async (date: Date) =>
       },
     })
 
-    revalidatePath("/")
+    revalidatePath("/[day]")
 
     return todo
   })
@@ -136,4 +136,29 @@ export const getSharedTodos = async (id: bigint) =>
         author: sharedTodo.author,
       } ?? []
     )
+  })
+
+export const revokeSharedTodos = async (date: Date) =>
+  await userAction(async (user) => {
+    const { startOfDate, endOfDate } = getDateDuration(date)
+    const sharedTodo = await prisma.sharedTodo.findFirst({
+      where: {
+        authorId: user.id,
+        date: {
+          gte: startOfDate,
+          lte: endOfDate,
+        },
+      },
+    })
+
+    if (!sharedTodo) return { ok: false, message: "Not found" }
+
+    await prisma.sharedTodo.delete({ where: { id: sharedTodo.id } })
+
+    return { ok: true }
+  })
+
+export const getUser = async () =>
+  await userAction(async (user) => {
+    return user
   })
