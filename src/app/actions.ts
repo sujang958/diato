@@ -108,8 +108,6 @@ export const shareTodos = async (date: Date) =>
       },
     })
 
-    console.log(newSharedTodo)
-
     return newSharedTodo.id
   })
 
