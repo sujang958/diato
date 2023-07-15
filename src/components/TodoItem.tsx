@@ -75,7 +75,9 @@ const TodoItem: FC<{
       />
       <input
         type="text"
-        className="h-6 w-full border-0 focus:ring-0"
+        className={`h-6 w-full border-0 focus:ring-0 ${
+          todo.finished ? "line-through" : ""
+        }`}
         placeholder="할 일 적기"
         value={todo.todo}
         disabled={!editable}
