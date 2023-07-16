@@ -43,7 +43,7 @@ export default async function MyAccountPage() {
 
   return (
     <div className="flex flex-col gap-y-6">
-      <Link href="/" className="flex flex-row items-center gap-x-2">
+      <Link href="/" className="flex flex-row items-center gap-x-2 -mt-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -68,16 +68,6 @@ export default async function MyAccountPage() {
             type="text"
             name="name"
             defaultValue={user.name}
-            className="rounded-lg border-neutral-300 px-2 py-1 text-[0.9rem]"
-          />
-        </label>
-        <label className="flex flex-col gap-y-1.5 text-sm">
-          이메일
-          <input
-            type="email"
-            inputMode="email"
-            name="email"
-            defaultValue={user.email}
             className="rounded-lg border-neutral-300 px-2 py-1 text-[0.9rem]"
           />
         </label>
